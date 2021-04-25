@@ -6,3 +6,9 @@ ion-content ion-toolbar {
     max-width: 30%;
     max-height: 30%;
 }
+
+.post {
+  padding: 12px;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}

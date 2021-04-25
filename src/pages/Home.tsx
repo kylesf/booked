@@ -7,7 +7,7 @@ import  Header from '../components/Header';
 const Home: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   return (
-    <IonPage>
+    <IonPage className="post">
       <Header title={"~ home ~"}/>
       <IonContent>
       <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} showCancelButton="focus"></IonSearchbar>
