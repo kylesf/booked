@@ -1,4 +1,4 @@
-import { IonCol, IonRow, IonImg, IonGrid, IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCard } from '@ionic/react';
+import { IonCol, IonRow, IonImg, IonGrid, IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCard, IonContent } from '@ionic/react';
 import React, {useState} from 'react';
 import { add } from 'ionicons/icons';
 import './Home.css';
@@ -9,61 +9,19 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <Header title={"~ home ~"}/>
+      <IonContent>
       <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} showCancelButton="focus"></IonSearchbar>
-      <IonGrid>
-        <IonRow>
-          <IonCol>
-          <IonCard>
-            <IonImg src="assets/rust.jpg" className="image-display"/>
-            <IonCardHeader>
-              <IonCardSubtitle>Rust</IonCardSubtitle>
-              <IonCardTitle>Rust Tutorial</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Learn how to write Rust today!
-            </IonCardContent>
-          </IonCard>
-          </IonCol>
-          <IonCol>
-          <IonCard>
-            <IonImg src="assets/rust.jpg" className="image-display"/>
-            <IonCardHeader>
-              <IonCardSubtitle>Rust</IonCardSubtitle>
-              <IonCardTitle>Rust Tutorial</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Learn how to write Rust today!
-            </IonCardContent>
-          </IonCard>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol>
-          <IonCard>
-            <IonImg src="assets/rust.jpg" className="image-display"/>
-            <IonCardHeader>
-              <IonCardSubtitle>Rust</IonCardSubtitle>
-              <IonCardTitle>Rust Tutorial</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Learn how to write Rust today!
-            </IonCardContent>
-          </IonCard>
-          </IonCol>
-          <IonCol>
-          <IonCard>
-            <IonImg src="assets/rust.jpg" className="image-display"/>
-            <IonCardHeader>
-              <IonCardSubtitle>Rust</IonCardSubtitle>
-              <IonCardTitle>Rust Tutorial</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Learn how to write Rust today!
-            </IonCardContent>
-          </IonCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+        <IonCard>
+              <IonImg src="assets/rust.jpg" className="image-display"/>
+              <IonCardHeader>
+                <IonCardSubtitle>Rust</IonCardSubtitle>
+                <IonCardTitle>Rust Tutorial</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                Learn how to write Rust today!
+              </IonCardContent>
+        </IonCard>
+      </IonContent>
         {/* New Bookmark Fab */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton routerLink="/bookmark/new" routerDirection="none">
