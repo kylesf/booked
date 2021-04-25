@@ -1,0 +1,7 @@
+{
+  "name": "booked",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
