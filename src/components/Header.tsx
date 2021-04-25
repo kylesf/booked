@@ -15,7 +15,6 @@ import React from 'react';
               <IonMenuButton></IonMenuButton>
             </IonButtons>
           <IonTitle slot="start" >{title}</IonTitle>
-          <IonTitle slot="end" >booked</IonTitle>
           </IonToolbar>
         </IonHeader>
   
