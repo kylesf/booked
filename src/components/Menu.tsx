@@ -11,12 +11,18 @@ import {
     IonTitle,
   } from '@ionic/react';
   import React from 'react';
-  import { bookmarks, home, add, cloudUploadOutline, downloadOutline, logOutOutline, cogOutline, } from 'ionicons/icons';
+  import { bookmarks, home, add, cloudUploadOutline, downloadOutline, logOutOutline, cogOutline, settings, } from 'ionicons/icons';
   import "./Menu.css";
  
   interface AppPage {
     title: string;
     url: string;
+    icon: string;
+  }
+
+  interface AppAction{
+    title: string;
+    action: any;
     icon: string;
   }
   
@@ -37,26 +43,43 @@ import {
       icon: bookmarks
     },
   ];
+  
+  function book_import() {
+    console.log("import")
+  };
 
-  const funcAppPages: AppPage[] = [
+  function book_export() {
+    console.log("export")
+  };
+  
+  function user_settings() {
+    console.log("settings")
+  };
+  
+  function logout() {
+    console.log("logout")
+  };
+
+
+  const funcAppPages: AppAction[] = [
     {
       title: 'Import',
-      url: '/import',
+      action: book_import,
       icon: cloudUploadOutline
     },
     {
       title: 'Export',
-      url: '/export',
+      action: book_export,
       icon: downloadOutline
     },
     {
       title: 'Settings',
-      url: '/settings',
+      action: user_settings,
       icon: cogOutline
     },
     {
       title: 'Logout',
-      url: '/logout',
+      action: logout,
       icon: logOutOutline
     },
   ];
@@ -87,7 +110,7 @@ import {
             {funcAppPages.map((appPage, index) => {
               return (
                 <IonMenuToggle key={index} autoHide={false}>
-                  <IonItem routerLink={appPage.url} routerDirection="none" lines="none" >
+                  <IonItem onClick={appPage.action} lines="none" >
                     <IonIcon slot="start" icon={appPage.icon} color="secondary" />
                     <IonLabel>{appPage.title}</IonLabel>
                   </IonItem>

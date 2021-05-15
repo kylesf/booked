@@ -1,26 +1,20 @@
-import { IonCol, IonRow, IonImg, IonGrid, IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCard, IonContent } from '@ionic/react';
-import React, {useState} from 'react';
+import { IonCol, IonRow, IonImg, IonGrid, IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonContent, IonSpinner } from '@ionic/react';
+import React from 'react';
 import { add } from 'ionicons/icons';
 import './Home.css';
 import  Header from '../components/Header';
+import  HomeView from '../components/HomeView';
+import { useAppState } from '../providers/app-state';
 
 const Home: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
+  const [{searchText, randList, }, setState] = useAppState();
+
   return (
     <IonPage className="post">
-      <Header title={"~ home ~"}/>
+      <Header title={"booked home"}/>
       <IonContent>
-      <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} showCancelButton="focus"></IonSearchbar>
-        <IonCard>
-              <IonImg src="assets/rust.jpg" className="image-display"/>
-              <IonCardHeader>
-                <IonCardSubtitle>Rust</IonCardSubtitle>
-                <IonCardTitle>Rust Tutorial</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                Learn how to write Rust today!
-              </IonCardContent>
-        </IonCard>
+      <IonSearchbar value={searchText} onIonChange={e => setState({ searchText: e.detail.value || '' })} showCancelButton="focus"></IonSearchbar>
+      {searchText === "" && <HomeView book_arr={randList}/>}
       </IonContent>
         {/* New Bookmark Fab */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
@@ -33,6 +27,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-
-

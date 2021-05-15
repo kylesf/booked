@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { AppStateProvider } from "./providers/app-state";
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppStateProvider>
+        <App />
+    </AppStateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

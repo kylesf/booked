@@ -1,22 +1,16 @@
 import { IonContent, IonPage, IonList, IonItemSliding, IonItem, IonIcon, IonLabel, IonItemOptions, IonItemOption, IonActionSheet, IonButtons, IonButton, IonAlert, IonToast } from '@ionic/react';
 import {checkmarkCircleOutline, ellipsisHorizontalOutline, chevronForwardOutline, trash, bookmarkOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
-import { Bookmark } from '../core/bookmark';
-import { useBookmarks } from '../core/bookmark-hook';
+import { Bookmark } from '../types/Bookmark';
+import { emptyBookmark } from '../types/Bookmark';
 import  Header from '../components/Header';
+import { useAppState } from '../providers/app-state';
 
 const Bookmarks: React.FC = () => {
-  const emptyBookmark: Bookmark = {
-    id: '',
-    title: '',
-    url: '',
-    info: ''
-  };
-
   const deletedBookmarks: Bookmark[] = [
   ]
-
-  const [bookmarks, setBookmarks] = useBookmarks();
+  const [{bookmarks}, setState] = useAppState()
+  
   const [selectedBookmark, setSelectedBookmark] = useState(emptyBookmark);
 
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -31,11 +25,12 @@ function undoDelete(){
   addBookmark(bookmarkToAdd);
 }
 function addBookmark(bookmark: Bookmark) {
-  setBookmarks(bookmarks => [...bookmarks, bookmark]);
+  setState(({bookmarks}) => ({bookmarks: [...(bookmarks || []), bookmark]}));
 }
 
 function deleteBookmark(bookmark: Bookmark) {
-  setBookmarks(bookmarks.filter(x => x.id !== bookmark.id));
+  console.log(bookmarks.filter((x: { id: string; }) => x.id !== bookmark.id))
+  setState({ bookmarks: bookmarks.filter((x: { id: string; }) => x.id !== bookmark.id)});
   setLastDeleted(lastDeleted => [...lastDeleted, bookmark]);
   setShowDeleteToast(true);
 }
@@ -46,31 +41,31 @@ function deleteBookmark(bookmark: Bookmark) {
 
   return (
     <IonPage>
-      <Header title={"~ bookmarks ~"}/>
+      <Header title={"bookmarks"}/>
       <IonContent>
-        <IonList>
-          {bookmarks.map((bookmark) => {
-            return (
-              <IonItemSliding key={bookmark.id}>
-                <IonItem>
-                  <IonIcon slot="start" icon={bookmarkOutline}></IonIcon>
-                  <IonLabel>{bookmark.title}</IonLabel>
-                  <IonButtons slot="end">
-                    <IonButton onClick={() => clickBookmark(bookmark)}>
-                      <IonIcon slot="icon-only" icon={ellipsisHorizontalOutline}></IonIcon>
-                    </IonButton>
-                    <IonButton routerLink={`/bookmark/${bookmark.id}`} routerDirection="forward">
-                      <IonIcon slot="icon-only" icon={chevronForwardOutline}></IonIcon>
-                    </IonButton>
-                  </IonButtons>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption color="danger" onClick={() => deleteBookmark(bookmark)}>Delete</IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
-            );
-          })}
-        </IonList>
+            <IonList>
+                {bookmarks.map((bookmark: Bookmark) => {
+                  return (
+                    <IonItemSliding key={bookmark.id}>
+                      <IonItem>
+                        <IonIcon slot="start" icon={bookmarkOutline}></IonIcon>
+                        <IonLabel>{bookmark.title}</IonLabel>
+                        <IonButtons slot="end">
+                          <IonButton onClick={() => clickBookmark(bookmark)}>
+                            <IonIcon slot="icon-only" icon={ellipsisHorizontalOutline}></IonIcon>
+                          </IonButton>
+                          <IonButton routerLink={`/bookmark/${bookmark.id}`} routerDirection="forward">
+                            <IonIcon slot="icon-only" icon={chevronForwardOutline}></IonIcon>
+                          </IonButton>
+                        </IonButtons>
+                      </IonItem>
+                      <IonItemOptions side="end">
+                        <IonItemOption color="danger" onClick={() => deleteBookmark(bookmark)}>Delete</IonItemOption>
+                      </IonItemOptions>
+                    </IonItemSliding>
+                  );
+                })}
+            </IonList>
         <IonActionSheet
           isOpen={!!selectedBookmark.id}
           header={`${selectedBookmark.title}`}
@@ -79,7 +74,7 @@ function deleteBookmark(bookmark: Bookmark) {
             {
               text: 'Edit',
               icon: checkmarkCircleOutline,
-              handler: () => { console.log("edit") }
+              handler: () => { window.location.href = "/bookmark/"+selectedBookmark.id }
             },
             {
               text: 'Delete',
@@ -105,7 +100,7 @@ function deleteBookmark(bookmark: Bookmark) {
       text: 'Delete',
       handler: () => { deleteBookmark(selectedBookmark); }
     }, {
-      text: 'Never mind',
+      text: 'Nevermind',
       role: 'cancel',
       handler: () => {
         console.log('Cancel clicked');
@@ -117,7 +112,7 @@ function deleteBookmark(bookmark: Bookmark) {
   isOpen={showDeleteToast}
   onDidDismiss={() => setShowDeleteToast(false)}
   message="Bookmark has been deleted."
-  duration={5000}
+  duration={2000}
   position="middle"
   color="success"
   buttons={[
@@ -127,8 +122,6 @@ function deleteBookmark(bookmark: Bookmark) {
   }
   ]}
 />
-
-
       </IonContent>
     </IonPage>
   );

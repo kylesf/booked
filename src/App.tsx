@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { IonApp, IonSpinner, IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 
@@ -25,23 +25,25 @@ import './theme/variables.css';
 import Bookmarks from './pages/Bookmarks';
 import BookmarkInfo from './pages/BookmarkInfo';
 import Menu from './components/Menu';
+import { useAppState } from './providers/app-state';
+import { Bookmark } from './types/Bookmark';
+
 
 const App: React.FC = () => {
-
   return (
     <IonApp>
       <IonReactRouter>
-        <IonSplitPane contentId="main">
-          <Menu />
-          <IonRouterOutlet id="main">
-            <Route exact path="/" render={() => <Redirect to="/home" />} />
-            <Route path="/home" component={Home} exact={true} />
-            <Route path="/bookmarks" component={Bookmarks} exact={true} />
-            <Route path="/bookmark/new" component={BookmarkInfo} exact={true} />
-            <Route path="/bookmark/:id" component={BookmarkInfo} exact={true} />
-          </IonRouterOutlet>
-        </IonSplitPane>
-      </IonReactRouter>
+          <IonSplitPane contentId="main">
+            <Menu />
+            <IonRouterOutlet id="main">
+              <Route exact path="/" render={() => <Redirect to="/home" />} />
+              <Route path="/home" component={Home} exact={true} />
+              <Route path="/bookmarks" component={Bookmarks} exact={true} />
+              <Route path="/bookmark/new" component={BookmarkInfo} exact={true} />
+              <Route path="/bookmark/:id" component={BookmarkInfo} exact={true} />
+            </IonRouterOutlet>
+          </IonSplitPane>
+        </IonReactRouter>
     </IonApp>
   );
 }
