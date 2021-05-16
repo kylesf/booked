@@ -1,4 +1,4 @@
-import { IonCol, IonRow, IonImg, IonGrid, IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonContent, IonSpinner } from '@ionic/react';
+import { IonSearchbar, IonFab, IonPage, IonFabButton, IonIcon, IonContent } from '@ionic/react';
 import React from 'react';
 import { add } from 'ionicons/icons';
 import './Home.css';
@@ -7,7 +7,10 @@ import  HomeView from '../components/HomeView';
 import { useAppState } from '../providers/app-state';
 
 const Home: React.FC = () => {
-  const [{searchText, randList, }, setState] = useAppState();
+  const [{searchText, randList, bookmarks }, setState] = useAppState();
+
+  const filteredBookmarks = bookmarks.filter (book =>
+      book.title.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <IonPage className="post">
@@ -15,8 +18,8 @@ const Home: React.FC = () => {
       <IonContent>
       <IonSearchbar value={searchText} onIonChange={e => setState({ searchText: e.detail.value || '' })} showCancelButton="focus"></IonSearchbar>
       {searchText === "" && <HomeView book_arr={randList}/>}
+      {searchText !== "" && <HomeView book_arr={filteredBookmarks}/>}
       </IonContent>
-        {/* New Bookmark Fab */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton routerLink="/bookmark/new" routerDirection="none">
             <IonIcon icon={add} />

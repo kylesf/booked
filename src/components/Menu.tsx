@@ -11,7 +11,7 @@ import {
     IonTitle,
   } from '@ionic/react';
   import React from 'react';
-  import { bookmarks, home, add, cloudUploadOutline, downloadOutline, logOutOutline, cogOutline, settings, } from 'ionicons/icons';
+  import { bookmarks, home, add, cloudUploadOutline, downloadOutline, logOutOutline, cogOutline} from 'ionicons/icons';
   import "./Menu.css";
  
   interface AppPage {
@@ -110,7 +110,7 @@ import {
             {funcAppPages.map((appPage, index) => {
               return (
                 <IonMenuToggle key={index} autoHide={false}>
-                  <IonItem onClick={appPage.action} lines="none" >
+                  <IonItem button onClick={appPage.action} lines="none" >
                     <IonIcon slot="start" icon={appPage.icon} color="secondary" />
                     <IonLabel>{appPage.title}</IonLabel>
                   </IonItem>

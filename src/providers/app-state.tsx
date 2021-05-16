@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { Bookmark } from '../types/Bookmark';
 
 type AppState = {
@@ -48,9 +48,11 @@ export function AppStateProvider( {children} : {children: React.ReactNode}) {
           bookmarks: response.blob,
           randList: [] as Bookmark[],
         };
-  
+        
+        // Fix collision issue
         for (let i = 0; i <= Math.min(nextState.bookmarks.length || 0, 6); i++) {
-          const random_index = Math.floor(Math.random() * nextState.bookmarks.length);
+          // const random_index = Math.floor(Math.random() * nextState.bookmarks.length);
+          const random_index = i;
           nextState.randList.push(nextState.bookmarks[random_index])
         }
 

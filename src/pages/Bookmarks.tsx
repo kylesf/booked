@@ -113,7 +113,7 @@ function deleteBookmark(bookmark: Bookmark) {
   onDidDismiss={() => setShowDeleteToast(false)}
   message="Bookmark has been deleted."
   duration={2000}
-  position="middle"
+  position="bottom"
   color="success"
   buttons={[
   {

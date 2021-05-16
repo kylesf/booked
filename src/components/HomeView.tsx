@@ -15,14 +15,14 @@ const HomeView = ({ book_arr } : { book_arr: Bookmark[] }) => {
         <React.Fragment>
             {book_arr.map((bookmark: Bookmark) => {
                 return (
-                <IonCard key={bookmark.id}>
-                    <IonImg src="assets/rust.jpg" className="image-display"/>
+                <IonCard onClick={() => {window.location.href = String(bookmark.url)}} key={bookmark.id}>
+                    <IonImg src={bookmark.pageImg} className="image-display"/>
                     <IonCardHeader>
-                    <IonCardSubtitle>Check this out</IonCardSubtitle>
+                    <IonCardSubtitle>Parent Name</IonCardSubtitle>
                     <IonCardTitle>{bookmark.title}</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                    {bookmark.info}
+                        {bookmark.info}
                     </IonCardContent>
                 </IonCard>
                 );

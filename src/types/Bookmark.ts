@@ -1,12 +1,12 @@
 export interface Bookmark {
     id: string;
-    title?: string;
+    title: string;
     subtitle?: string;
     info?: string;
     dateAdded?: number,
     lastModified?: number,
     pageImg?: string,
-    url?: string;
+    url: string;
     tags?: Array<string>;
     children?: Array<Bookmark>;
 }

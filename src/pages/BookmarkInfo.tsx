@@ -18,8 +18,42 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
 
   const pageTitle = `${editBookmark.title}`
 
-  const saveBookmark = () => {
+  type PageInfo = {
+    title: string,
+    description: string,
+    image_url: string,
+  }
+
+  // Determine how to run only as needed?
+  const getInfo = async (url: string) => {
+    let pageData  = await  fetch ("https://api.linkpreview.net/?key=d9be283151b00a10bd475e863d978e61&q="+url);
+    let pageDataJson = await pageData.json();
+    const bookPageInfo: PageInfo  = {
+      title: pageDataJson.title,
+      description: pageDataJson.description,
+      image_url: pageDataJson.image
+    }
+    return bookPageInfo;
+  }
+  const saveBookmark = async () => {
     let payload: Bookmark[];
+
+    if (editBookmark.url !== "" ) {
+      console.log("Get Info")
+      let bookPageInfo = await getInfo(editBookmark.url)
+      console.log(bookPageInfo)
+      if (bookPageInfo !== undefined) {
+        editBookmark.title = bookPageInfo.title;
+        editBookmark.info = bookPageInfo.description;
+        editBookmark.pageImg = bookPageInfo.image_url;
+        console.log(bookPageInfo.image_url)
+      }
+    } else {
+      console.log("Error")
+    }
+
+    console.log(editBookmark.pageImg)
+
     if (editBookmark.id === "") {
       editBookmark.id = String(bookmarks.length + 1)
       payload = [...bookmarks, editBookmark]
@@ -33,7 +67,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
     method: "POST",
     body: JSON.stringify({uuid: uuid, blob: payload})
     })
-    .then(()=>{setShowAddToast(true)}) 
+    .then(()=>{console.log(payload);setShowAddToast(true)}) 
     .catch(err => console.log(err));
   }
 
@@ -75,7 +109,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
           onDidDismiss={() => setShowAddToast(false)}
           message="Bookmark has been added."
           duration={1000}
-          position="middle"
+          position="bottom"
           color="success"
         />
       </IonContent>
