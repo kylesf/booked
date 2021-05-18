@@ -1,12 +1,6 @@
 ion-content ion-toolbar {
-    --background: translucent;
-  }
-
-/* Temp CSS */
-/* .image-display {
-    max-width: 30%;
-    max-height: 30%;
-} */
+  --background: translucent;
+}
 
 .post {
   padding: 12px;
