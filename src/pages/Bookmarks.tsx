@@ -9,29 +9,32 @@ import { useAppState } from '../providers/app-state';
 const Bookmarks: React.FC = () => {
   const deletedBookmarks: Bookmark[] = [
   ]
-  const [{bookmarks}, setState] = useAppState()
+  const [{bookmarks, uuid}, setState] = useAppState()
   
   const [selectedBookmark, setSelectedBookmark] = useState(emptyBookmark);
-
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showDeleteToast, setShowDeleteToast] = useState(false);
   const [lastDeleted, setLastDeleted] = useState(deletedBookmarks);
 
+  const saveBookmarks = async (payload : Bookmark[]) => {
+    fetch('https://bookmark-api.byteword.workers.dev/api/add', {
+    method: "POST",
+    body: JSON.stringify({uuid: uuid, blob: payload})
+    }).catch(err => console.log(err));
+  }
+
 function undoDelete(){
-  // Remove from lastDeleted
   const bookmarkToAdd  = lastDeleted.slice(-1)[0]; 
   setLastDeleted(lastDeleted.filter(x => x.id !== bookmarkToAdd.id));
-  // Add back to list of bookmarks
-  addBookmark(bookmarkToAdd);
-}
-function addBookmark(bookmark: Bookmark) {
-  setState(({bookmarks}) => ({bookmarks: [...(bookmarks || []), bookmark]}));
+  const payload = [...(bookmarks || []), bookmarkToAdd]
+  saveBookmarks(payload);
 }
 
 function deleteBookmark(bookmark: Bookmark) {
-  console.log(bookmarks.filter((x: { id: string; }) => x.id !== bookmark.id))
-  setState({ bookmarks: bookmarks.filter((x: { id: string; }) => x.id !== bookmark.id)});
+  const payload = bookmarks.filter((x: { id: string; }) => x.id !== bookmark.id);
+  setState({ bookmarks:payload});
   setLastDeleted(lastDeleted => [...lastDeleted, bookmark]);
+  saveBookmarks(payload);
   setShowDeleteToast(true);
 }
 

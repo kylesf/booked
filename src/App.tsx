@@ -25,9 +25,6 @@ import './theme/variables.css';
 import Bookmarks from './pages/Bookmarks';
 import BookmarkInfo from './pages/BookmarkInfo';
 import Menu from './components/Menu';
-import { useAppState } from './providers/app-state';
-import { Bookmark } from './types/Bookmark';
-
 
 const App: React.FC = () => {
   return (

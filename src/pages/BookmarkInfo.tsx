@@ -35,7 +35,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
     }
     return bookPageInfo;
   }
-  const saveBookmark = async () => {
+  const saveBookmarks = async () => {
     let payload: Bookmark[];
 
     if (editBookmark.url !== "" ) {
@@ -51,8 +51,6 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
     } else {
       console.log("Error")
     }
-
-    console.log(editBookmark.pageImg)
 
     if (editBookmark.id === "") {
       editBookmark.id = String(bookmarks.length + 1)
@@ -81,7 +79,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
   useEffect(() => {
     const bookmark = bookmarks.find((x: { id: string; }) => x.id === bookmarkId) || emptyBookmark;
     setEditBookmark(bookmark)
-  }, [bookmarkId])
+  }, [bookmarkId, bookmarks])
 
   return (
     <IonPage>
@@ -103,7 +101,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
                 </IonItem>
               );
         })}
-        <IonButton onClick={saveBookmark} expand="block" color="secondary">Save</IonButton>
+        <IonButton onClick={saveBookmarks} expand="block" color="secondary">Save</IonButton>
         <IonToast
           isOpen={showAddToast}
           onDidDismiss={() => setShowAddToast(false)}

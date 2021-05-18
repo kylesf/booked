@@ -13,6 +13,7 @@ import {
   import React from 'react';
   import { bookmarks, home, add, cloudUploadOutline, downloadOutline, logOutOutline, cogOutline} from 'ionicons/icons';
   import "./Menu.css";
+  import { useAppState } from '../providers/app-state';
  
   interface AppPage {
     title: string;
@@ -43,49 +44,68 @@ import {
       icon: bookmarks
     },
   ];
-  
-  function book_import() {
-    console.log("import")
-  };
-
-  function book_export() {
-    console.log("export")
-  };
-  
-  function user_settings() {
-    console.log("settings")
-  };
-  
-  function logout() {
-    console.log("logout")
-  };
-
-
-  const funcAppPages: AppAction[] = [
-    {
-      title: 'Import',
-      action: book_import,
-      icon: cloudUploadOutline
-    },
-    {
-      title: 'Export',
-      action: book_export,
-      icon: downloadOutline
-    },
-    {
-      title: 'Settings',
-      action: user_settings,
-      icon: cogOutline
-    },
-    {
-      title: 'Logout',
-      action: logout,
-      icon: logOutOutline
-    },
-  ];
-  
-  
+    
   const Menu: React.FC = () => {
+    const [{bookmarks}] = useAppState()
+    
+    function json_process(file: JSON){
+      console.log(file)
+    }
+
+    function book_import() {
+      document.getElementById('file-input')!.click()
+      const fileSelector : any = document.getElementById('file-input');
+      fileSelector.addEventListener('change', (event: any) => { 
+        const reader = new FileReader();
+        const file = event.target.files[0];
+        reader.onload = function () {
+          const result: any= reader.result
+          let parsedJSON = JSON.parse(result);
+          json_process(parsedJSON)
+        }
+        reader.readAsText(file);
+      });
+    };
+  
+    function book_export() {
+        // Temp
+        // Credit: https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bookmarks));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", "booked.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    };
+     
+    function logout() {
+      console.log("logout")
+    };
+
+    const funcAppPages: AppAction[] = [
+      {
+        title: 'Import',
+        action: book_import,
+        icon: cloudUploadOutline
+      },
+      {
+        title: 'Export',
+        action: book_export,
+        icon: downloadOutline
+      },
+      // {
+      //   title: 'Settings',
+      //   action: user_settings,
+      //   icon: cogOutline
+      // },
+      {
+        title: 'Logout',
+        action: logout,
+        icon: logOutOutline
+      },
+    ];
+
     return (
       <IonMenu contentId="main" side="start" type="reveal">
         <IonHeader>
@@ -106,6 +126,7 @@ import {
               );
             })}
           </IonList>
+          <input id="file-input" type="file" name="name" accept=".json"/>
           <IonList id="second-list">
             {funcAppPages.map((appPage, index) => {
               return (

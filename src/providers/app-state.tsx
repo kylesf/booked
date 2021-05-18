@@ -50,7 +50,7 @@ export function AppStateProvider( {children} : {children: React.ReactNode}) {
         };
         
         // Fix collision issue
-        for (let i = 0; i <= Math.min(nextState.bookmarks.length || 0, 6); i++) {
+        for (let i = 1; i <= Math.min(nextState.bookmarks.length || 0, 6); i++) {
           // const random_index = Math.floor(Math.random() * nextState.bookmarks.length);
           const random_index = i;
           nextState.randList.push(nextState.bookmarks[random_index])
@@ -59,7 +59,7 @@ export function AppStateProvider( {children} : {children: React.ReactNode}) {
         setState(nextState);
       })
       .catch(error => setState({ isLoading: false, error }));
-  }, []);
+  }, [setState]);
   
   if (state.isLoading) {
     return null
