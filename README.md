@@ -1,9 +1,7 @@
 # booked
-<<<<<<< HEAD
 
 Native and Progressive Web App for Managing Bookmarks independent of Browser
 =======
->>>>>>> 5bd100e350ed16f92a1a4fdda21c6b2d45d34036
 
 [Live Demo Here](https://booked.byteword.net) (Currently best viewed on mobile currently, not desktop optimized)
 
