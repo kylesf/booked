@@ -25,6 +25,7 @@ import "./theme/variables.css";
 import Bookmarks from "./pages/Bookmarks";
 import BookmarkInfo from "./pages/BookmarkInfo";
 import Menu from "./components/Menu";
+import FolderNew from "./components/FolderNew";
 
 const App: React.FC = () => {
   return (
@@ -38,6 +39,8 @@ const App: React.FC = () => {
             <Route path="/bookmarks" component={Bookmarks} exact={true} />
             <Route path="/bookmark/new" component={BookmarkInfo} exact={true} />
             <Route path="/bookmark/:id" component={BookmarkInfo} exact={true} />
+            <Route path="/folder/new" component={FolderNew} exact={true} />
+            <Route path="/folder/:id" component={FolderNew} exact={true} />
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

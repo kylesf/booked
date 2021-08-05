@@ -22,3 +22,5 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+.prettierignore
+.prettierrc.json 

@@ -46,6 +46,11 @@ const appPages: AppPage[] = [
     icon: add,
   },
   {
+    title: "New Folder",
+    url: "/folder/new",
+    icon: add,
+  },
+  {
     title: "Bookmarks",
     url: "/bookmarks",
     icon: bookmarks,

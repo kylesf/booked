@@ -12,6 +12,8 @@ import {
   IonItem,
   IonLabel,
   IonInput,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import React, { useState, useEffect } from "react";
 import { Bookmark, emptyBookmark } from "../types/Bookmark";
@@ -29,11 +31,12 @@ const fields: Array<keyof Bookmark> = [
   "url",
   "tags",
   "info",
+  "folder",
 ];
 
 const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
   const bookmarkId = match.params.id;
-  const [{ bookmarks, uuid }, setState] = useAppState();
+  const [{ bookmarks, uuid, folderList }, setState] = useAppState();
   const [editBookmark, setEditBookmark] = useState(emptyBookmark);
   const [showAddToast, setShowAddToast] = useState(false);
 
@@ -61,6 +64,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
   };
   const saveBookmarks = async () => {
     let payload: Bookmark[];
+    const now = new Date();
 
     if (editBookmark.url !== "") {
       console.log("Get Info");
@@ -70,6 +74,8 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
         editBookmark.title = bookPageInfo.title;
         editBookmark.info = bookPageInfo.description;
         editBookmark.pageImg = bookPageInfo.image_url;
+        editBookmark.lastModified = now.getDate();
+        editBookmark.dateAdded = now.getDate();
         console.log(bookPageInfo.image_url);
       }
     } else {
@@ -83,6 +89,7 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
       const index = bookmarks.findIndex(
         (bookmark) => bookmark.id === editBookmark.id
       );
+      editBookmark.lastModified = now.getDate();
       payload = [...bookmarks];
       payload[index] = editBookmark;
     }
@@ -126,16 +133,27 @@ const BookmarkInfo: React.FC<BookmarkInfoPageProps> = ({ match }) => {
       </IonHeader>
       <IonContent>
         {fields.map((item) => {
-          return (
-            <IonItem key={item}>
-              <IonLabel position="stacked">{item}</IonLabel>
-              <IonInput
-                name={item}
-                onIonChange={changeBookmark}
-                value={editBookmark[item] as string}
-              ></IonInput>
-            </IonItem>
-          );
+          if (item === 'folder') {
+            return (
+              <IonItem key={item}>
+                <IonSelect placeholder="Select Folder Location">
+                    {folderList.map((item) => { return (<IonSelectOption key={item.title}>{item.title}</IonSelectOption>)})}
+                </IonSelect>
+            </IonItem> 
+            )
+          } else {
+            return (
+              <IonItem key={item}>
+                <IonLabel position="stacked">{item}</IonLabel>
+                <IonInput
+                  name={item}
+                  onIonChange={changeBookmark}
+                  value={editBookmark[item] as string}
+                ></IonInput>
+              </IonItem>
+            )
+          }
+          
         })}
         <IonButton onClick={saveBookmarks} expand="block" color="secondary">
           Save

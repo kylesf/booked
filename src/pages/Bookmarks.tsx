@@ -20,21 +20,20 @@ import {
   chevronForwardOutline,
   trash,
   bookmarkOutline,
+  folderOutline
 } from "ionicons/icons";
 import React, { useState } from "react";
-import { Bookmark } from "../types/Bookmark";
-import { emptyBookmark } from "../types/Bookmark";
+import { Bookmark, emptyBookmark, Folder } from "../types/Bookmark";
 import Header from "../components/Header";
 import { useAppState } from "../providers/app-state";
 
 const Bookmarks: React.FC = () => {
-  const deletedBookmarks: Bookmark[] = [];
-  const [{ bookmarks, uuid }, setState] = useAppState();
-
-  const [selectedBookmark, setSelectedBookmark] = useState(emptyBookmark);
+  const [{rootFolder, uuid }, setState] = useAppState();
+  const [selectedItem, setSelectedItem] = useState<Bookmark | Folder>(emptyBookmark);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showDeleteToast, setShowDeleteToast] = useState(false);
-  const [lastDeleted, setLastDeleted] = useState(deletedBookmarks);
+
+  const children = rootFolder.children
 
   const saveBookmarks = async (payload: Bookmark[]) => {
     fetch("https://bookmark-api.byteword.workers.dev/api/add", {
@@ -43,25 +42,17 @@ const Bookmarks: React.FC = () => {
     }).catch((err) => console.log(err));
   };
 
-  function undoDelete() {
-    const bookmarkToAdd = lastDeleted.slice(-1)[0];
-    setLastDeleted(lastDeleted.filter((x) => x.id !== bookmarkToAdd.id));
-    const payload = [...(bookmarks || []), bookmarkToAdd];
-    saveBookmarks(payload);
-  }
-
-  function deleteBookmark(bookmark: Bookmark) {
-    const payload = bookmarks.filter(
-      (x: { id: string }) => x.id !== bookmark.id
-    );
-    setState({ bookmarks: payload });
-    setLastDeleted((lastDeleted) => [...lastDeleted, bookmark]);
-    saveBookmarks(payload);
+  function deleteItem(item: Bookmark | Folder) {
+    // const payload = item.filter(
+    //   (x: { id: string }) => x.id !== item.id
+    // );
+    // setState({ bookmarks: payload });
+    // saveBookmarks(payload);
     setShowDeleteToast(true);
   }
 
-  function clickBookmark(bookmark: Bookmark) {
-    setSelectedBookmark(bookmark);
+  function clickItem(item: Bookmark | Folder) {
+    setSelectedItem(item);
   }
 
   return (
@@ -69,52 +60,60 @@ const Bookmarks: React.FC = () => {
       <Header title={"bookmarks"} />
       <IonContent>
         <IonList>
-          {bookmarks.map((bookmark: Bookmark) => {
-            return (
-              <IonItemSliding key={bookmark.id}>
-                <IonItem>
-                  <IonIcon slot="start" icon={bookmarkOutline}></IonIcon>
-                  <IonLabel>{bookmark.title}</IonLabel>
-                  <IonButtons slot="end">
-                    <IonButton onClick={() => clickBookmark(bookmark)}>
-                      <IonIcon
-                        slot="icon-only"
-                        icon={ellipsisHorizontalOutline}
-                      ></IonIcon>
-                    </IonButton>
-                    <IonButton
-                      routerLink={`/bookmark/${bookmark.id}`}
-                      routerDirection="forward"
+          {children.map((item: Bookmark | Folder) => {              
+              return (
+              <IonItemSliding key={item.id}>
+                  <IonItem>
+                    {item.type === "folder" && <IonIcon slot="start" icon={folderOutline}></IonIcon>}
+                    {item.type === "bookmark" && <IonIcon slot="start" icon={bookmarkOutline}></IonIcon>}
+                    <IonLabel>{item.title}</IonLabel>
+                    <IonButtons slot="end">
+                      <IonButton onClick={() => clickItem(item as Bookmark)}>
+                        <IonIcon
+                          slot="icon-only"
+                          icon={ellipsisHorizontalOutline}
+                        ></IonIcon>
+                      </IonButton>
+                      {item.type === "folder" && 
+                      <IonButton routerLink={`/folder/${item.id}`} routerDirection="forward">
+                        <IonIcon
+                          slot="icon-only"
+                          icon={chevronForwardOutline}
+                        ></IonIcon>
+                      </IonButton>
+                      }
+                      {item.type === "bookmark" && 
+                      <IonButton routerLink={`/bookmark/${item.id}`} routerDirection="forward">
+                        <IonIcon
+                          slot="icon-only"
+                          icon={chevronForwardOutline}
+                        ></IonIcon>
+                      </IonButton>
+                      }
+                    </IonButtons>
+                  </IonItem>
+                  <IonItemOptions side="end">
+                    <IonItemOption
+                      color="danger"
+                      onClick={() => deleteItem(item as Bookmark)}
                     >
-                      <IonIcon
-                        slot="icon-only"
-                        icon={chevronForwardOutline}
-                      ></IonIcon>
-                    </IonButton>
-                  </IonButtons>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => deleteBookmark(bookmark)}
-                  >
-                    Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
-            );
+                      Delete
+                    </IonItemOption>
+                  </IonItemOptions>
+                </IonItemSliding>
+              )
           })}
         </IonList>
         <IonActionSheet
-          isOpen={!!selectedBookmark.id}
-          header={`${selectedBookmark.title}`}
-          onDidDismiss={() => setSelectedBookmark(emptyBookmark)}
+          isOpen={!!selectedItem.id}
+          header={`${selectedItem.title}`}
+          onDidDismiss={() => setSelectedItem(emptyBookmark)}
           buttons={[
             {
               text: "Edit",
               icon: checkmarkCircleOutline,
               handler: () => {
-                window.location.href = "/bookmark/" + selectedBookmark.id;
+                window.location.href = "/" + selectedItem.type + "/" + selectedItem.id;
               },
             },
             {
@@ -138,12 +137,12 @@ const Bookmarks: React.FC = () => {
           onDidDismiss={() => setShowDeleteAlert(false)}
           header="Delete this bookmark?"
           message="This operation cannot be undone."
-          subHeader={`${selectedBookmark.title}`}
+          subHeader={`${selectedItem.title}`}
           buttons={[
             {
               text: "Delete",
               handler: () => {
-                deleteBookmark(selectedBookmark);
+                deleteItem(selectedItem);
               },
             },
             {
@@ -165,9 +164,9 @@ const Bookmarks: React.FC = () => {
           color="success"
           buttons={[
             {
-              text: "Undo",
+              text: "X",
               handler: () => {
-                undoDelete();
+                setShowDeleteToast(false);
               },
             },
           ]}

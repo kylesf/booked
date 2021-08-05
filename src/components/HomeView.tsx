@@ -3,7 +3,6 @@ import {
   IonImg,
   IonCardHeader,
   IonCardTitle,
-  IonCardSubtitle,
   IonCardContent,
 } from "@ionic/react";
 import React from "react";
@@ -22,7 +21,7 @@ const HomeView = ({ book_arr }: { book_arr: Bookmark[] }) => {
           >
             <IonImg src={bookmark.pageImg} className="image-display" />
             <IonCardHeader>
-              <IonCardSubtitle>Parent Name</IonCardSubtitle>
+              {/* <IonCardSubtitle>Parent Name</IonCardSubtitle> */}
               <IonCardTitle>{bookmark.title}</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>{bookmark.info}</IonCardContent>

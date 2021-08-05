@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import { Bookmark } from "../types/Bookmark";
+import { Bookmark, Folder, emptyFolder } from "../types/Bookmark";
 
 type AppState = {
   isLoading: boolean;
-  uuid?: number;
+  uuid: string;
+  rootFolder: Folder;
   error?: Error;
   searchText: string;
   bookmarks: Bookmark[];
   randList: Bookmark[];
+  folderList: Folder[];
 };
 
 type AppContextTypes = [
@@ -17,11 +19,13 @@ type AppContextTypes = [
 
 const initialState = {
   isLoading: true,
-  uuid: undefined,
+  uuid: "",
+  rootFolder: emptyFolder,
   error: undefined,
   searchText: "",
   bookmarks: [],
   randList: [],
+  folderList: [],
 };
 
 // Context
@@ -55,10 +59,57 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         const nextState = {
           isLoading: false,
           uuid: response.uuid,
-          bookmarks: response.blob,
+          rootFolder: response.blob[0],
+          bookmarks: [] as Bookmark[],
+          folderList: [] as Folder[],
           randList: [] as Bookmark[],
         };
 
+        // // Traverse Root Folder to Populate Bookmarks and Folders
+        // for (const [key, value, path, parent] of traverse(nextState.rootFolder)) {
+        //   // do something here with each key and value
+        //   console.log(key, value, path, parent);
+        //   if (key === 'folder') {
+        //     nextState.folderList.push(parent)
+        //   } else {
+        //     nextState.bookmarks.push(parent)
+        //   }
+        // }
+
+        const FolderA: Folder = {
+          id: "99",
+          type: "folder",
+          title: "Top Level",
+          dateAdded: 0,
+          lastModified: 0,
+          children: [],
+        }
+
+        const FolderB: Folder = {
+          id: "99",
+          type: "folder",
+          title: "Tech",
+          dateAdded: 0,
+          lastModified: 0,
+          children: [],
+        }
+
+        const FolderC: Folder = {
+          id: "99",
+          type: "folder",
+          title: "News",
+          dateAdded: 0,
+          lastModified: 0,
+          children: [],
+        }
+
+        nextState.folderList.push(FolderA);
+        nextState.folderList.push(FolderB);
+        nextState.folderList.push(FolderC);
+
+
+         // Temp override. Delete
+        nextState.bookmarks = nextState.rootFolder.children;
         // Fix collision issue
         for (
           let i = 1;
